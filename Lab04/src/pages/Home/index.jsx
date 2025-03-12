@@ -15,21 +15,30 @@ const Home = () => {
         <>
             <Header></Header>
             <Container>
-                <div style={{ width: '100%', textAlign: 'center' }}>
-                    {productRows.map((rowProducts, rowIndex) => (
-                        <Row style={{ display: 'flex' }} key={rowIndex} className="mb-4">
-                            {rowProducts.map((product) => (
-                                <Col style={{ margin: '20px 16px', width: '100%' }} key={product.id} lg={3} md={4} sm={6}>
-                                    <CartProduct
-                                        name={product.name}
-                                        img={product.img}
-                                        minutes={product.minutes}
-                                    />
-                                </Col>
+                <Row className="flex">
+                    <Col lg={5}>
+                        <div>
+                            <img className="w-[100%]" src="./img/9b0ccc06afe71eb947f6.jpg" alt="" />
+                        </div>
+                    </Col>
+                    <Col lg={7}>
+                        <div style={{ width: '100%', textAlign: 'center' }}>
+                            {productRows.map((rowProducts, rowIndex) => (
+                                <Row style={{ display: 'flex' }} key={rowIndex} className="mb-4">
+                                    {rowProducts.map((product) => (
+                                        <Col style={{ margin: '20px 16px', width: '100%' }} key={product.id} lg={3} md={4} sm={6}>
+                                            <CartProduct
+                                                name={product.name}
+                                                img={product.img}
+                                                minutes={product.minutes}
+                                            />
+                                        </Col>
+                                    ))}
+                                </Row>
                             ))}
-                        </Row>
-                    ))}
-                </div>
+                        </div>
+                    </Col>
+                </Row>
             </Container>
             <Footer></Footer>
         </>
