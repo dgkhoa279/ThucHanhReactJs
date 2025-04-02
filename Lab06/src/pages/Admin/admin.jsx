@@ -3,7 +3,7 @@ function Admin() {
     return (
         <div className="container">
             <div className="header">
-                <h2>Navbar</h2>
+                <h2>Navbar search</h2>
             </div>
             <div className="menu">
                 <a href="#">Dashboard</a>
