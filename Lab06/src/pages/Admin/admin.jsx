@@ -163,17 +163,20 @@ function Admin() {
                     <img src="../Squares four 1.png" alt="" />
                     <h4>Overview</h4>
                 </div>
+                <div style={{display:'flex',justifyContent:'space-around'}}>
                 {
-                    overview.map((item,index) =>(
+                    overview.map((item, index) => (
                         <ComponentOverview
-                    title={title}
-                    money={money}
-                    percent={percent}
-                    img={img}
-
-                />
+                            key={index}
+                            title={item.title}
+                            money={item.money}
+                            percent={item.percent}
+                            img={item.img}
+                        />
                     ))
+                    
                 }
+                </div>
             </div>
             <div className="detai_report">
                 <h4>Detai report</h4>
