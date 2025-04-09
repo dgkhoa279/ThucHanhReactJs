@@ -2,15 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Card, Table, Button, Form, InputGroup, Badge, Nav } from 'react-bootstrap';
 import { FaBell, FaQuestionCircle, FaSearch, FaShoppingCart, FaDollarSign, FaUsers, FaPen, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-const data = [
-  { name: 'Elizabeth Lee', company: 'AvatarSystems', value: '$359', date: '10/07/2023', status: 'New' },
-  { name: 'Carlos Garcia', company: 'SmoozShift', value: '$747', date: '24/07/2023', status: 'New' },
-  { name: 'Elizabeth Bailey', company: 'Prime Time Telecom', value: '$564', date: '08/08/2023', status: 'In-progress' },
-  { name: 'Ryan Brown', company: 'OmniTech Corporation', value: '$541', date: '31/08/2023', status: 'In-progress' },
-  { name: 'Ryan Young', company: 'DataStream Inc.', value: '$769', date: '01/05/2023', status: 'Completed' },
-  { name: 'Hailey Adams', company: 'FlowRush', value: '$922', date: '10/06/2023', status: 'Completed' },
-];
+import { useEffect, useState } from 'react';
 
 const getStatusVariant = (status) => {
   switch (status) {
@@ -22,9 +14,29 @@ const getStatusVariant = (status) => {
 };
 
 const Admin = () => {
+  // Di chuyển useState và useEffect vào trong component
+  const [customers, setCustomers] = useState([]);
+
+  useEffect(() => {
+    fetch("https://randomuser.me/api/?results=5") // Lấy 5 khách hàng để hiển thị
+      .then((res) => res.json())
+      .then((data) => {
+        // Chuyển đổi dữ liệu từ API thành định dạng phù hợp
+        const formattedCustomers = data.results.map((user, idx) => ({
+          name: `${user.name.first} ${user.name.last}`,
+          company: 'N/A', // API không cung cấp, có thể thay bằng dữ liệu thực tế
+          value: `$${(Math.random() * 10000).toFixed(2)}`, // Giả lập giá trị đơn hàng
+          date: new Date().toLocaleDateString(), // Giả lập ngày
+          status: ['New', 'In-progress', 'Completed'][Math.floor(Math.random() * 3)] // Ngẫu nhiên trạng thái
+        }));
+        setCustomers(formattedCustomers);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
+
   return (
     <Container fluid className="bg-light min-vh-100 p-0">
-      <Row className="g-0" style={{width:'1500px'}}>
+      <Row className="g-0" style={{ width: '1500px' }}>
         {/* Sidebar */}
         <Col md={2} className="bg-white p-3 border-end">
           <div className="text-center mb-4">
@@ -139,7 +151,7 @@ const Admin = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item, idx) => (
+                  {customers.map((item, idx) => (
                     <tr key={idx}>
                       <td><Form.Check /></td>
                       <td>{item.name}</td>
@@ -153,7 +165,7 @@ const Admin = () => {
                 </tbody>
               </Table>
               <div className="d-flex justify-content-between align-items-center text-muted small">
-                <span>63 results</span>
+                <span>{customers.length} results</span>
                 <div>
                   <Button variant="light" size="sm"><FaChevronLeft /></Button>{' '}
                   <span className="mx-2">1</span>
