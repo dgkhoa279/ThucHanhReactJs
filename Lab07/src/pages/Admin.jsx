@@ -1,8 +1,9 @@
 import React from 'react';
-import { Container, Row, Col, Card, Table, Button, Form, InputGroup, Badge, Nav } from 'react-bootstrap';
-import { FaBell, FaQuestionCircle, FaSearch, FaShoppingCart, FaDollarSign, FaUsers, FaPen, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { Container, Row, Col, Card, Button, InputGroup, Badge, Nav } from 'react-bootstrap';
+import { FaBell, FaQuestionCircle, FaSearch, FaShoppingCart, FaDollarSign, FaUsers, FaPen } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
+import DataTable from 'react-data-table-component'; // Import DataTable
 
 const getStatusVariant = (status) => {
   switch (status) {
@@ -13,21 +14,58 @@ const getStatusVariant = (status) => {
   }
 };
 
+// Định nghĩa cột cho DataTable
+const columns = [
+  {
+    name: '',
+    selector: row => <input type="checkbox" />,
+    width: '50px',
+  },
+  {
+    name: 'CUSTOMER NAME',
+    selector: row => row.name,
+    sortable: true,
+  },
+  {
+    name: 'COMPANY',
+    selector: row => row.company,
+    sortable: true,
+  },
+  {
+    name: 'ORDER VALUE',
+    selector: row => row.value,
+    sortable: true,
+  },
+  {
+    name: 'ORDER DATE',
+    selector: row => row.date,
+    sortable: true,
+  },
+  {
+    name: 'STATUS',
+    selector: row => <Badge bg={getStatusVariant(row.status)}>{row.status}</Badge>,
+    sortable: true,
+  },
+  {
+    name: '',
+    selector: row => <FaPen className="text-muted" />,
+    width: '50px',
+  },
+];
+
 const Admin = () => {
-  // Di chuyển useState và useEffect vào trong component
   const [customers, setCustomers] = useState([]);
 
   useEffect(() => {
-    fetch("https://randomuser.me/api/?results=5") // Lấy 5 khách hàng để hiển thị
+    fetch("https://randomuser.me/api/?results=5")
       .then((res) => res.json())
       .then((data) => {
-        // Chuyển đổi dữ liệu từ API thành định dạng phù hợp
-        const formattedCustomers = data.results.map((user, idx) => ({
+        const formattedCustomers = data.results.map((user) => ({
           name: `${user.name.first} ${user.name.last}`,
-          company: 'N/A', // API không cung cấp, có thể thay bằng dữ liệu thực tế
-          value: `$${(Math.random() * 10000).toFixed(2)}`, // Giả lập giá trị đơn hàng
-          date: new Date().toLocaleDateString(), // Giả lập ngày
-          status: ['New', 'In-progress', 'Completed'][Math.floor(Math.random() * 3)] // Ngẫu nhiên trạng thái
+          company: 'N/A',
+          value: `$${(Math.random() * 10000).toFixed(2)}`,
+          date: new Date().toLocaleDateString(),
+          status: ['New', 'In-progress', 'Completed'][Math.floor(Math.random() * 3)],
         }));
         setCustomers(formattedCustomers);
       })
@@ -71,8 +109,8 @@ const Admin = () => {
             <Col><h4 className="fw-semibold">DashBoard</h4></Col>
             <Col md={4}>
               <InputGroup>
-                <Form.Control placeholder="Search..." />
                 <InputGroup.Text><FaSearch /></InputGroup.Text>
+                <input className="form-control" placeholder="Search..." />
               </InputGroup>
             </Col>
             <Col className="text-end">
@@ -128,7 +166,7 @@ const Admin = () => {
             </Col>
           </Row>
 
-          {/* Table Section */}
+          {/* DataTable Section */}
           <Card>
             <Card.Body>
               <div className="d-flex justify-content-between align-items-center mb-3">
@@ -138,40 +176,15 @@ const Admin = () => {
                   <Button variant="light">Export</Button>
                 </div>
               </div>
-              <Table responsive hover>
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>CUSTOMER NAME</th>
-                    <th>COMPANY</th>
-                    <th>ORDER VALUE</th>
-                    <th>ORDER DATE</th>
-                    <th>STATUS</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {customers.map((item, idx) => (
-                    <tr key={idx}>
-                      <td><Form.Check /></td>
-                      <td>{item.name}</td>
-                      <td>{item.company}</td>
-                      <td>{item.value}</td>
-                      <td>{item.date}</td>
-                      <td><Badge bg={getStatusVariant(item.status)}>{item.status}</Badge></td>
-                      <td><FaPen className="text-muted" /></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-              <div className="d-flex justify-content-between align-items-center text-muted small">
-                <span>{customers.length} results</span>
-                <div>
-                  <Button variant="light" size="sm"><FaChevronLeft /></Button>{' '}
-                  <span className="mx-2">1</span>
-                  <Button variant="light" size="sm"><FaChevronRight /></Button>
-                </div>
-              </div>
+              <DataTable
+                columns={columns}
+                data={customers}
+                pagination
+                highlightOnHover
+                responsive
+                defaultSortField="name"
+                defaultSortAsc={true}
+              />
             </Card.Body>
           </Card>
         </Col>
