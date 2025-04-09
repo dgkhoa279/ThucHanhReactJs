@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Button, InputGroup, Badge, Nav } from 'react
 import { FaBell, FaQuestionCircle, FaSearch, FaShoppingCart, FaDollarSign, FaUsers, FaPen } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
-import DataTable from 'react-data-table-component'; // Import DataTable
+import DataTable from 'react-data-table-component';
 
 const getStatusVariant = (status) => {
   switch (status) {
@@ -14,7 +14,7 @@ const getStatusVariant = (status) => {
   }
 };
 
-// Định nghĩa cột cho DataTable
+
 const columns = [
   {
     name: '',
@@ -55,6 +55,7 @@ const columns = [
 
 const Admin = () => {
   const [customers, setCustomers] = useState([]);
+  const [activePage, setActivePage] = useState('DashBoard'); // Quản lý trang active, mặc định là DashBoard
 
   useEffect(() => {
     fetch("https://randomuser.me/api/?results=5")
@@ -72,6 +73,11 @@ const Admin = () => {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
+  // Hàm xử lý khi click vào một Nav.Link
+  const handleNavClick = (page) => {
+    setActivePage(page);
+  };
+
   return (
     <Container fluid className="bg-light min-vh-100 p-0">
       <Row className="g-0" style={{ width: '1500px' }}>
@@ -85,12 +91,48 @@ const Admin = () => {
             </div>
           </div>
           <Nav className="flex-column">
-            <Nav.Link active className="text-pink fw-semibold">DashBoard</Nav.Link>
-            <Nav.Link>Projects</Nav.Link>
-            <Nav.Link>Teams</Nav.Link>
-            <Nav.Link>Analytics</Nav.Link>
-            <Nav.Link>Messages</Nav.Link>
-            <Nav.Link>Integrations</Nav.Link>
+            <Nav.Link
+              active={activePage === 'DashBoard'}
+              className={activePage === 'DashBoard' ? 'text-pink fw-semibold' : ''}
+              onClick={() => handleNavClick('DashBoard')}
+            >
+              DashBoard
+            </Nav.Link>
+            <Nav.Link
+              active={activePage === 'Projects'}
+              className={activePage === 'Projects' ? 'text-pink fw-semibold' : ''}
+              onClick={() => handleNavClick('Projects')}
+            >
+              Projects
+            </Nav.Link>
+            <Nav.Link
+              active={activePage === 'Teams'}
+              className={activePage === 'Teams' ? 'text-pink fw-semibold' : ''}
+              onClick={() => handleNavClick('Teams')}
+            >
+              Teams
+            </Nav.Link>
+            <Nav.Link
+              active={activePage === 'Analytics'}
+              className={activePage === 'Analytics' ? 'text-pink fw-semibold' : ''}
+              onClick={() => handleNavClick('Analytics')}
+            >
+              Analytics
+            </Nav.Link>
+            <Nav.Link
+              active={activePage === 'Messages'}
+              className={activePage === 'Messages' ? 'text-pink fw-semibold' : ''}
+              onClick={() => handleNavClick('Messages')}
+            >
+              Messages
+            </Nav.Link>
+            <Nav.Link
+              active={activePage === 'Integrations'}
+              className={activePage === 'Integrations' ? 'text-pink fw-semibold' : ''}
+              onClick={() => handleNavClick('Integrations')}
+            >
+              Integrations
+            </Nav.Link>
           </Nav>
           <Card className="mt-4 text-center">
             <Card.Body>
@@ -176,7 +218,6 @@ const Admin = () => {
                   <Button variant="light">Export</Button>
                 </div>
               </div>
-              // Đổ dữ liệu từ API 
               <DataTable
                 columns={columns}
                 data={customers}
