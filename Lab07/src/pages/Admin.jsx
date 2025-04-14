@@ -4,7 +4,7 @@ import { FaBell, FaQuestionCircle, FaSearch, FaShoppingCart, FaDollarSign, FaUse
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
-
+import Sidebar from '../layout/Sidebar';
 const getStatusVariant = (status) => {
   switch (status) {
     case 'New': return 'info';
@@ -55,7 +55,7 @@ const columns = [
 
 const Admin = () => {
   const [customers, setCustomers] = useState([]);
-  const [activePage, setActivePage] = useState('DashBoard'); // Quản lý trang active, mặc định là DashBoard
+
 
   useEffect(() => {
     fetch("https://randomuser.me/api/?results=5")
@@ -73,76 +73,13 @@ const Admin = () => {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  // Hàm xử lý khi click vào một Nav.Link
-  const handleNavClick = (page) => {
-    setActivePage(page);
-  };
+
 
   return (
     <Container fluid className="bg-light min-vh-100 p-0">
       <Row className="g-0" style={{ width: '1500px' }}>
         {/* Sidebar */}
-        <Col md={2} className="bg-white p-3 border-end">
-          <div className="text-center mb-4">
-            <div className="d-flex align-items-center justify-content-center">
-              <div>
-                <img src="../Image 1858.png" alt="" />
-              </div>
-            </div>
-          </div>
-          <Nav className="flex-column">
-            <Nav.Link
-              active={activePage === 'DashBoard'}
-              className={activePage === 'DashBoard' ? 'text-pink fw-semibold' : ''}
-              onClick={() => handleNavClick('DashBoard')}
-            >
-              DashBoard
-            </Nav.Link>
-            <Nav.Link
-              active={activePage === 'Projects'}
-              className={activePage === 'Projects' ? 'text-pink fw-semibold' : ''}
-              onClick={() => handleNavClick('Projects')}
-            >
-              Projects
-            </Nav.Link>
-            <Nav.Link
-              active={activePage === 'Teams'}
-              className={activePage === 'Teams' ? 'text-pink fw-semibold' : ''}
-              onClick={() => handleNavClick('Teams')}
-            >
-              Teams
-            </Nav.Link>
-            <Nav.Link
-              active={activePage === 'Analytics'}
-              className={activePage === 'Analytics' ? 'text-pink fw-semibold' : ''}
-              onClick={() => handleNavClick('Analytics')}
-            >
-              Analytics
-            </Nav.Link>
-            <Nav.Link
-              active={activePage === 'Messages'}
-              className={activePage === 'Messages' ? 'text-pink fw-semibold' : ''}
-              onClick={() => handleNavClick('Messages')}
-            >
-              Messages
-            </Nav.Link>
-            <Nav.Link
-              active={activePage === 'Integrations'}
-              className={activePage === 'Integrations' ? 'text-pink fw-semibold' : ''}
-              onClick={() => handleNavClick('Integrations')}
-            >
-              Integrations
-            </Nav.Link>
-          </Nav>
-          <Card className="mt-4 text-center">
-            <Card.Body>
-              <img src="../Group.png" alt="update" className="mb-2" />
-              <Card.Text className="text-muted small">V2.0 is available</Card.Text>
-              <Button variant="outline-primary" size="sm">Try now</Button>
-            </Card.Body>
-          </Card>
-          <div className="text-center mt-3 text-muted small">Made with Visily</div>
-        </Col>
+      <Sidebar></Sidebar>
 
         {/* Main Content */}
         <Col md={10} className="p-4">

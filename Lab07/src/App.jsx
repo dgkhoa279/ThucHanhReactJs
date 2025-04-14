@@ -1,10 +1,16 @@
-import Admin from "./pages/Admin"
-import
+import Admin from "../src/pages/Admin"
+import {Routes,Route} from "react-router-dom"
+import { publicRoutes } from "./routes/routes"
 function App (){
   return (
-    <>
-      <Admin></Admin>
-    </>
+    <Routes>
+      {
+        publicRoutes.map((route,index)=> (
+          <Route path={route.path} element ={<route.component />} />
+        ))
+      }
+    </Routes>
   )
 }
+
 export default App
