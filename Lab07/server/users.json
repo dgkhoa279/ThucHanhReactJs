@@ -1,45 +1,44 @@
 {
-    "users": [
-      {
-        "img": "../Avatar (1).png",
-        "customerName": "John Doe",
-        "company": "Tech Corp",
-        "orderValue": "$2000",
-        "orderDate": "2025-04-02",
-        "status": "Completed"
-      },
-      {
-        "img": "../Avatar (2).png",
-        "customerName": "Alice Smith",
-        "company": "Business Solutions",
-        "orderValue": "$1500",
-        "orderDate": "2025-03-30",
-        "status": "Pending"
-      },
-      {
-        "img": "../Avatar (3).png",
-        "customerName": "Bob Johnson",
-        "company": "Innovative Tech",
-        "orderValue": "$1200",
-        "orderDate": "2025-04-01",
-        "status": "Shipped"
-      },
-      {
-        "img": "../Avatar (4).png",
-        "customerName": "Charlie Brown",
-        "company": "Creative Designs",
-        "orderValue": "$1800",
-        "orderDate": "2025-03-28",
-        "status": "Completed"
-      },
-      {
-        "img": "../Avatar (5).png",
-        "customerName": "Charlie Laliga",
-        "company": "Creative Designs",
-        "orderValue": "$6500",
-        "orderDate": "2025-03-28",
-        "status": "Completed"
-      }
-    ]
-  }
-  
+  "users": [
+    {
+      "img": "../Avatar (1).png",
+      "customerName": "Hahaha",
+      "company": "Tech Corp",
+      "orderValue": "$2000",
+      "orderDate": "2025-04-02",
+      "status": "Completed"
+    },
+    {
+      "img": "../Avatar (2).png",
+      "customerName": "Alice Smith",
+      "company": "Business Solutions",
+      "orderValue": "$1500",
+      "orderDate": "2025-03-30",
+      "status": "Pending"
+    },
+    {
+      "img": "../Avatar (3).png",
+      "customerName": "Bob Johnson",
+      "company": "Innovative Tech",
+      "orderValue": "$1200",
+      "orderDate": "2025-04-01",
+      "status": "Shipped"
+    },
+    {
+      "img": "../Avatar (4).png",
+      "customerName": "Charlie Brown",
+      "company": "Creative Designs",
+      "orderValue": "$1800",
+      "orderDate": "2025-03-28",
+      "status": "Completed"
+    },
+    {
+      "img": "../Avatar (5).png",
+      "customerName": "Charlie Laliga",
+      "company": "Creative Designs",
+      "orderValue": "$6500",
+      "orderDate": "2025-03-28",
+      "status": "Completed"
+    }
+  ]
+}
