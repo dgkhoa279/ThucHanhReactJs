@@ -39,6 +39,13 @@
       "orderValue": "$6500",
       "orderDate": "2025-03-28",
       "status": "Completed"
+    },
+    {
+      "customerName": "s",
+      "company": "s",
+      "orderValue": "200",
+      "orderDate": "2025-04-02",
+      "status": "In-progress"
     }
   ]
 }

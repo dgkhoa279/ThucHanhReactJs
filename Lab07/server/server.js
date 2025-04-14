@@ -69,6 +69,35 @@ app.put('/api/users/:id', async (req, res) => {
   }
 });
 
+// API: Thêm user mới
+app.post('/api/users', async (req, res) => {
+  try {
+    const newUser = req.body;
+
+    // Đọc dữ liệu hiện tại
+    const data = await fs.readFile(usersFilePath, 'utf-8');
+    const jsonData = JSON.parse(data);
+
+    // Thêm user mới vào mảng
+    jsonData.users.push({
+      customerName: newUser.customerName,
+      company: newUser.company,
+      orderValue: newUser.orderValue,
+      orderDate: newUser.orderDate,
+      status: newUser.status,
+    });
+
+    // Ghi lại file
+    await fs.writeFile(usersFilePath, JSON.stringify(jsonData, null, 2));
+
+    // Trả về user vừa thêm
+    res.status(201).json(newUser);
+  } catch (error) {
+    console.error('Lỗi thêm user:', error);
+    res.status(500).json({ error: 'Lỗi server' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server đang chạy tại http://localhost:${PORT}`);
 });

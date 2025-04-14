@@ -64,7 +64,8 @@ const columns = (handleEditClick) => [
 
 const Admin = () => {
   const [customers, setCustomers] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -85,7 +86,7 @@ const Admin = () => {
       })
       .then((data) => {
         const formattedCustomers = data.users.map((user, index) => ({
-          id: index, // Thêm id để xác định user khi cập nhật
+          id: index,
           name: user.customerName,
           company: user.company,
           value: user.orderValue,
@@ -107,7 +108,19 @@ const Admin = () => {
       date: row.date,
       status: row.status,
     });
-    setShowModal(true);
+    setShowEditModal(true);
+  };
+
+  // Xử lý khi bấm nút "Add user"
+  const handleAddClick = () => {
+    setFormData({
+      name: '',
+      company: '',
+      value: '',
+      date: '',
+      status: 'New',
+    });
+    setShowAddModal(true);
   };
 
   // Xử lý khi thay đổi giá trị trong form
@@ -117,9 +130,8 @@ const Admin = () => {
   };
 
   // Xử lý lưu thông tin đã chỉnh sửa
-  const handleSave = async () => {
+  const handleSaveEdit = async () => {
     try {
-      // Gửi yêu cầu PUT hoặc PATCH tới server để cập nhật user
       const response = await fetch(`http://localhost:5000/api/users/${selectedCustomer.id}`, {
         method: 'PUT',
         headers: {
@@ -138,7 +150,6 @@ const Admin = () => {
         throw new Error('Lỗi khi cập nhật dữ liệu');
       }
 
-      // Cập nhật danh sách customers trong state
       setCustomers((prev) =>
         prev.map((customer) =>
           customer.id === selectedCustomer.id
@@ -147,23 +158,75 @@ const Admin = () => {
         )
       );
 
-      // Đóng modal
-      setShowModal(false);
+      setShowEditModal(false);
       setSelectedCustomer(null);
     } catch (error) {
       console.error('Error updating data:', error);
     }
   };
 
-  // Đóng modal
-  const handleClose = () => {
-    setShowModal(false);
+  // Xử lý thêm người dùng mới
+  const handleSaveAdd = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customerName: formData.name,
+          company: formData.company,
+          orderValue: formData.value,
+          orderDate: formData.date,
+          status: formData.status,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Lỗi khi thêm người dùng');
+      }
+
+      // Lấy dữ liệu mới từ server để cập nhật state
+      const newUser = await response.json();
+      setCustomers((prev) => [
+        ...prev,
+        {
+          id: customers.length,
+          name: newUser.customerName,
+          company: newUser.company,
+          value: newUser.orderValue,
+          date: newUser.orderDate,
+          status: newUser.status,
+        },
+      ]);
+
+      setShowAddModal(false);
+      setFormData({
+        name: '',
+        company: '',
+        value: '',
+        date: '',
+        status: 'New',
+      });
+    } catch (error) {
+      console.error('Error adding user:', error);
+    }
+  };
+
+  // Đóng modal chỉnh sửa
+  const handleCloseEdit = () => {
+    setShowEditModal(false);
     setSelectedCustomer(null);
+  };
+
+  // Đóng modal thêm mới
+  const handleCloseAdd = () => {
+    setShowAddModal(false);
   };
 
   return (
     <Container fluid className="bg-light min-vh-100 p-0">
-      <Row className="g-0" style={{ width: '1500px' }}>
+      <Row className="g-0 " style={{ width: '1500px',margin:"0 auto"}}>
         {/* Sidebar */}
         <Sidebar />
 
@@ -241,7 +304,7 @@ const Admin = () => {
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h6 className="fw-semibold">Detailed report</h6>
                 <div>
-                  <Button variant="light" className="me-2">
+                  <Button variant="light" className="me-2" onClick={handleAddClick}>
                     Add user
                   </Button>
                 </div>
@@ -261,7 +324,7 @@ const Admin = () => {
       </Row>
 
       {/* Modal chỉnh sửa */}
-      <Modal show={showModal} onHide={handleClose}>
+      <Modal show={showEditModal} onHide={handleCloseEdit}>
         <Modal.Header closeButton>
           <Modal.Title>Chỉnh sửa thông tin khách hàng</Modal.Title>
         </Modal.Header>
@@ -318,11 +381,82 @@ const Admin = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleCloseEdit}>
             Đóng
           </Button>
-          <Button variant="primary" onClick={handleSave}>
+          <Button variant="primary" onClick={handleSaveEdit}>
             Lưu
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal thêm người dùng */}
+      <Modal show={showAddModal} onHide={handleCloseAdd}>
+        <Modal.Header closeButton>
+          <Modal.Title>Thêm khách hàng mới</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Tên khách hàng</Form.Label>
+              <Form.Control
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="Nhập tên khách hàng"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Công ty</Form.Label>
+              <Form.Control
+                type="text"
+                name="company"
+                value={formData.company}
+                onChange={handleInputChange}
+                placeholder="Nhập tên công ty"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Giá trị đơn hàng</Form.Label>
+              <Form.Control
+                type="text"
+                name="value"
+                value={formData.value}
+                onChange={handleInputChange}
+                placeholder="Nhập giá trị đơn hàng (ví dụ: $1000)"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Ngày đặt hàng</Form.Label>
+              <Form.Control
+                type="text"
+                name="date"
+                value={formData.date}
+                onChange={handleInputChange}
+                placeholder="Nhập ngày (ví dụ: 2025-04-10)"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Trạng thái</Form.Label>
+              <Form.Select
+                name="status"
+                value={formData.status}
+                onChange={handleInputChange}
+              >
+                <option value="New">New</option>
+                <option value="In-progress">In-progress</option>
+                <option value="Completed">Completed</option>
+              </Form.Select>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseAdd}>
+            Đóng
+          </Button>
+          <Button variant="primary" onClick={handleSaveAdd}>
+            Thêm
           </Button>
         </Modal.Footer>
       </Modal>
