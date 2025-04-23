@@ -49,19 +49,65 @@
 
 
 // Redux 
+// import { useState } from 'react';
+// import { Provider, useDispatch, useSelector } from 'react-redux';
+// import store from './store'
+
+// function Calculator() {
+//   const [a, setA] = useState('');
+//   const [b, setB] = useState('');
+//   const dispatch = useDispatch();
+//   const result = useSelector((state) => state.result);
+
+//   return (
+//     <div className="p-4">
+//       <h1 className="text-xl mb-2">Redux Calculator</h1>
+//       <input
+//         type="number"
+//         value={a}
+//         onChange={(e) => setA(Number(e.target.value))}
+//         placeholder="a"
+//         className="border px-2 py-1 mr-2"
+//       />
+//       <input
+//         type="number"
+//         value={b}
+//         onChange={(e) => setB(Number(e.target.value))}
+//         placeholder="b"
+//         className="border px-2 py-1 mr-2"
+//       />
+//       <div className="mt-2">
+//         <button onClick={() => dispatch({ type: 'ADD', a, b })}>+</button>
+//         <button onClick={() => dispatch({ type: 'SUBTRACT', a, b })}>-</button>
+//       </div>
+//       <h2 className="mt-4">Result: {result}</h2>
+//     </div>
+//   );
+// }
+
+// export default function App() {
+//   return (
+//     <Provider store={store}>
+//       <Calculator />
+//     </Provider>
+//   );
+// }
+
+// Redux toolkit
 import { useState } from 'react';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import store from './store'
+import { store } from './store';
+import { add, subtract } from './features/calculatorSlice';
 
 function Calculator() {
   const [a, setA] = useState('');
   const [b, setB] = useState('');
   const dispatch = useDispatch();
-  const result = useSelector((state) => state.result);
+  const result = useSelector((state) => state.calculator.result);
 
   return (
     <div className="p-4">
-      <h1 className="text-xl mb-2">Redux Calculator</h1>
+      <h1 className="text-xl mb-2">Redux Toolkit Calculator</h1>
       <input
         type="number"
         value={a}
@@ -77,8 +123,8 @@ function Calculator() {
         className="border px-2 py-1 mr-2"
       />
       <div className="mt-2">
-        <button onClick={() => dispatch({ type: 'ADD', a, b })}>+</button>
-        <button onClick={() => dispatch({ type: 'SUBTRACT', a, b })}>-</button>
+        <button onClick={() => dispatch(add({ a, b }))}>+</button>
+        <button onClick={() => dispatch(subtract({ a, b }))}>-</button>
       </div>
       <h2 className="mt-4">Result: {result}</h2>
     </div>
@@ -92,4 +138,3 @@ export default function App() {
     </Provider>
   );
 }
-
