@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// App.jsx
+import { useReducer, useState } from 'react';
 
-function App() {
-  const [count, setCount] = useState(0)
+const initialState = { result: 0 };
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+function reducer(state, action) {
+  switch (action.type) {
+    case 'ADD':
+      return { result: action.a + action.b };
+    case 'SUBTRACT':
+      return { result: action.a - action.b };
+    default:
+      return state;
+  }
 }
 
-export default App
+function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [a, setA] = useState('');
+  const [b, setB] = useState('');
+
+  return (
+    <div className="p-4">
+      <h1 className="text-xl mb-2">useReducer Calculator</h1>
+      <input
+        type="number"
+        value={a}
+        onChange={(e) => setA(Number(e.target.value))}
+        placeholder="a"
+        className="border px-2 py-1 mr-2"
+      />
+      <input
+        type="number"
+        value={b}
+        onChange={(e) => setB(Number(e.target.value))}
+        placeholder="b"
+        className="border px-2 py-1 mr-2"
+      />
+      <div className="mt-2">
+        <button onClick={() => dispatch({ type: 'ADD', a, b })}>+</button>
+        <button onClick={() => dispatch({ type: 'SUBTRACT', a, b })}>-</button>
+      </div>
+      <h2 className="mt-4">Result: {state.result}</h2>
+    </div>
+  );
+}
+
+export default App;
